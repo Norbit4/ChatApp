@@ -46,7 +46,7 @@ public class ChatRoom {
         for (String user : chatRoom.users) {
             //Message message = new Message();
 
-            message.setMessageType("CHAT_MESSAGE");
+            message.setMessageType(MessageType.CHAT_MESSAGE);
             message.setReceiver(user);
 
             sendMessageToClient(message);
@@ -56,7 +56,7 @@ public class ChatRoom {
 
         for (String user : users) {
             Message message = new Message();
-            message.setMessageType("READY");
+            message.setMessageType(MessageType.READY);
             message.setReceiver(user);
 
             sendMessageToClient(message);
@@ -67,7 +67,7 @@ public class ChatRoom {
 
         for (String user : users) {
             Message message = new Message();
-            message.setMessageType("DISCONNECT");
+            message.setMessageType(MessageType.DISCONNECT);
             message.setReceiver(user);
 
             sendMessageToClient(message);
@@ -78,7 +78,7 @@ public class ChatRoom {
 
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.setMessage(message.getMessage());
-        responseMessage.setMessageType(message.getMessageType());
+        responseMessage.setMessageType(message.getMessageType().toString());
         responseMessage.setUsername(message.getUsername());
 
         simpMessagingTemplate.convertAndSendToUser(message.getReceiver(),"/private", responseMessage);

@@ -12,6 +12,6 @@ public class Message {
     private String username;
     private String receiver;
     private String color;
-    private String messageType;
+    private MessageType messageType;
     private String roomUUID;
 }
