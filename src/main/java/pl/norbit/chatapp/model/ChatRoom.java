@@ -1,11 +1,7 @@
 package pl.norbit.chatapp.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.java.Log;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import pl.norbit.chatapp.service.ChatService;
 
