@@ -1,6 +1,7 @@
 package pl.norbit.chatapp.model;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.java.Log;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import pl.norbit.chatapp.service.ChatService;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Data
 @Log
 public class ChatRoom {
+    @Getter
     private static HashMap<UUID, ChatRoom> rooms = new HashMap<>();
     private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -40,11 +42,9 @@ public class ChatRoom {
         roomReady();
     }
 
-    public void userMessage(UUID roomUUID, Message message){
-        ChatRoom chatRoom = rooms.get(roomUUID);
+    public void userMessage(ChatRoom chatRoom, Message message){
 
         for (String user : chatRoom.users) {
-            //Message message = new Message();
 
             message.setMessageType(MessageType.CHAT_MESSAGE);
             message.setReceiver(user);

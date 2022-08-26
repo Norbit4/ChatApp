@@ -12,25 +12,38 @@ import pl.norbit.chatapp.model.ChatRoom;
 import pl.norbit.chatapp.model.Message;
 import pl.norbit.chatapp.model.ResponseMessage;
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.UUID;
+import java.util.*;
 
 import static java.lang.Thread.sleep;
 
-@Service
-@Log
+@Service @Log
 @AllArgsConstructor
 public class ChatService {
 
     private static Queue<User> userQueue;
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @Data
-    @NoArgsConstructor
+    @Data @NoArgsConstructor
     private static class User{
         private String username;
         private SimpMessagingTemplate simpMessagingTemplate;
+    }
+
+    private static class Task extends TimerTask {
+        @Override
+        public void run() {
+            log.info(String.valueOf(userQueue.size()));
+
+            if(userQueue.size() >= 2){
+                User user1 = userQueue.poll();
+                User user2 = userQueue.poll();
+
+                new ChatRoom(
+                        new String[]{user1.getUsername(), user2.getUsername()},
+                        user1.getSimpMessagingTemplate()
+                );
+            }
+        }
     }
 
     @Bean
@@ -44,26 +57,10 @@ public class ChatService {
     private static void startQueue(){
 
         userQueue = new LinkedList<>();
-        log.info("Starting");
+        log.info("Timer starting");
+        Timer timer = new Timer();
 
-        //new Thread(() -> {
-
-            while (true) {
-                log.info(String.valueOf(userQueue.size()));
-                if(userQueue.size() >= 2){
-                    User user1 = userQueue.poll();
-                    User user2 = userQueue.poll();
-
-                    new ChatRoom(new String[]{user1.getUsername(), user2.getUsername()}, user1.getSimpMessagingTemplate());
-                }
-
-                try {
-                    sleep(500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        //});
+        timer.scheduleAtFixedRate(new Task(), 0, 500);
     }
     public void join(Message message){
         User user = new User();
@@ -78,16 +75,8 @@ public class ChatService {
     }
 
     public void message(Message message){
-        //ChatRoom.userMessage(UUID.fromString(message.getRoomUUID()), message);
-    }
+        ChatRoom chatRoom = ChatRoom.getRooms().get(UUID.fromString(message.getRoomUUID()));
 
-    public void sendMessageToClient(Message message) {
-
-        ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setMessage(message.getMessage());
-        responseMessage.setMessageType(message.getMessageType());
-        responseMessage.setUsername(message.getUsername());
-
-        //simpMessagingTemplate.convertAndSendToUser(message.getReceiver(),"/private", responseMessage);
+        chatRoom.userMessage(chatRoom, message);
     }
 }
