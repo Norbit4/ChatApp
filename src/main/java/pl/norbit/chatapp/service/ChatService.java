@@ -10,11 +10,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import pl.norbit.chatapp.model.ChatRoom;
 import pl.norbit.chatapp.model.Message;
-import pl.norbit.chatapp.model.ResponseMessage;
 
 import java.util.*;
 
-import static java.lang.Thread.sleep;
 
 @Service @Log
 @AllArgsConstructor
@@ -32,7 +30,7 @@ public class ChatService {
     private static class Task extends TimerTask {
         @Override
         public void run() {
-            log.info(String.valueOf(userQueue.size()));
+            //log.info(String.valueOf(userQueue.size()));
 
             if(userQueue.size() >= 2){
                 User user1 = userQueue.poll();

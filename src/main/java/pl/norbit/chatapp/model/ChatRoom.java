@@ -57,6 +57,7 @@ public class ChatRoom {
         for (String user : users) {
             Message message = new Message();
             message.setMessageType(MessageType.READY);
+            message.setRoomUUID(roomId.toString());
             message.setReceiver(user);
 
             sendMessageToClient(message);
@@ -80,6 +81,7 @@ public class ChatRoom {
         responseMessage.setMessage(message.getMessage());
         responseMessage.setMessageType(message.getMessageType().toString());
         responseMessage.setUsername(message.getUsername());
+        responseMessage.setRoomUUID(message.getRoomUUID());
 
         simpMessagingTemplate.convertAndSendToUser(message.getReceiver(),"/private", responseMessage);
     }

@@ -12,4 +12,5 @@ public class ResponseMessage {
     private String username;
     private String color;
     private String messageType;
+    private String roomUUID;
 }
